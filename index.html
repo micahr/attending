@@ -1,38 +1,73 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf-8">
-<title>Ember Starter Kit</title>
-  <link rel="stylesheet" href="css/normalize.css">
+  <meta charset="utf-8">
+  <title>Attending</title>
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/bootswatch.min.css">
+  <link rel="stylesheet" href="/css/bootstrap-responsive.min.css">
   <link rel="stylesheet" href="css/style.css">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
   <script type="text/x-handlebars">
-    <h2>{{#linkTo index}}Attending{{/linkTo}}</h2>
+    <div class="navbar navbar-static-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
 
-    {{outlet}}
+          {{#linkTo index class="brand"}}Attending{{/linkTo}}
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li>{{#linkTo events }}Events{{/linkTo}}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container-fluid main-content">
+      {{outlet}}
+    </div>
   </script>
 
   <script type="text/x-handlebars" data-template-name="index">
-    <ul>
-    {{#each item in model}}
-      <li>{{#linkTo event.index item}}{{item.name}} - {{item.date}}{{/linkTo}}</li>
-    {{/each}}
-    </ul>
+    <div class="row-fluid">
+      <div class="span12">
+        <p>
+        Feel like attending an event?
+        </p>
+      </div>
+    </div>
   </script>
-
+  <script type="text/x-handlebars" data-template-name="events">
+    <div class="row-fluid">
+      <div class="span12">
+        <ul>
+          {{#each item in model}}
+          <li>{{#linkTo event item}}{{item.name}} - {{item.formattedDate}}{{/linkTo}}</li>
+          {{/each}}
+        </ul>
+      </div>
+    </div>
+  </script>
   <script type="text/x-handlebars" data-template-name="event">
-    {{log this}}
     <h1>{{name}}</h1>
-    {{date}}
+    {{formattedDate}}
   </script>
 
   <script src="https://cdn.firebase.com/v0/firebase.js"></script>
   <script src="js/libs/jquery-1.9.1.js"></script>
   <script src="js/libs/handlebars-1.0.0-rc.3.js"></script>
+  <script src="js/libs/bootstrap.min.js"></script>
   <script src="js/libs/ember-1.0.0-rc.3.js"></script>
   <script src="js/libs/ember-data-latest.js"></script>
   <script src="js/libs/firebase_adapter.js"></script>
+  <script src="js/libs/moment.min.js"></script>
   <script src="js/app.js"></script>
 
 </body>
