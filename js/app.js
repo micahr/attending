@@ -13,14 +13,23 @@ App.Router.map(function() {
     this.route("edit");
   });
 });
+App.Router.reopen({
+  location: 'history'
+});
 
-App.Event = DS.Firebase.Model.extend({
+App.Event = DS.Firebase.LiveModel.extend({
   name: DS.attr("string"),
   date: DS.attr("date"),
+  attendees: DS.hasMany("App.Attendee"),
 
   formattedDate: function(){
     return moment(this.get("date")).format("MMM Do YYYY h:mm:ss a")
   }.property("date")
+});
+
+App.Attendee = DS.Firebase.Model.extend({
+  name: DS.attr("string"),
+  event: DS.belongsTo("App.Event")
 });
 
 App.IndexRoute = Ember.Route.extend({
