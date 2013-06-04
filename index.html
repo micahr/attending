@@ -6,7 +6,7 @@
   <link rel="stylesheet" href="/css/bootstrap.min.css">
   <link rel="stylesheet" href="/css/bootswatch.min.css">
   <link rel="stylesheet" href="/css/bootstrap-responsive.min.css">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
@@ -25,6 +25,7 @@
           <div class="nav-collapse collapse">
             <ul class="nav">
               <li>{{#linkTo events }}Events{{/linkTo}}</li>
+              <li>{{#linkTo events.new }}New Event{{/linkTo}}</li>
             </ul>
           </div>
         </div>
@@ -39,14 +40,16 @@
     <div class="row-fluid">
       <div class="span12">
         <p>
-        Feel like attending an event?
+        Feel like attending an event? {{#linkTo events }} See All Events{{/linkTo}}
         </p>
+        <p>How about creating one? {{#linkTo events.new }}Create Event{{/linkTo}}</p>
       </div>
     </div>
   </script>
-  <script type="text/x-handlebars" data-template-name="events">
+  <script type="text/x-handlebars" data-template-name="events/index">
     <div class="row-fluid">
       <div class="span12">
+        <h3>Events</h3>
         <ul>
           {{#each item in model}}
           <li>{{#linkTo event item}}{{item.name}} - {{item.formattedDate}}{{/linkTo}}</li>
@@ -55,20 +58,28 @@
       </div>
     </div>
   </script>
+  <script type="text/x-handlebars" data-template-name="events/new">
+    <h3>Create Event</h3>
+    <label for="event-name">Name</label>{{view Ember.TextField id="event-name" valueBinding="name" }}
+    <label for="event-date">Date</label>{{view Ember.TextField id="event-date" valueBinding="date"}}
+    <p>
+      <button class="btn btn-success" id="event-create" {{action 'createEvent'}} >Create New Event</button>
+    </p>
+  </script>
   <script type="text/x-handlebars" data-template-name="event">
     <h1>{{name}}</h1>
     {{formattedDate}}
   </script>
 
   <script src="https://cdn.firebase.com/v0/firebase.js"></script>
-  <script src="js/libs/jquery-1.9.1.js"></script>
-  <script src="js/libs/handlebars-1.0.0-rc.3.js"></script>
-  <script src="js/libs/bootstrap.min.js"></script>
-  <script src="js/libs/ember-1.0.0-rc.3.js"></script>
-  <script src="js/libs/ember-data-latest.js"></script>
-  <script src="js/libs/firebase_adapter.js"></script>
-  <script src="js/libs/moment.min.js"></script>
-  <script src="js/app.js"></script>
+  <script src="/js/libs/jquery-1.9.1.js"></script>
+  <script src="/js/libs/handlebars-1.0.0-rc.3.js"></script>
+  <script src="/js/libs/bootstrap.min.js"></script>
+  <script src="/js/libs/ember-1.0.0-rc.3.js"></script>
+  <script src="/js/libs/ember-data-latest.js"></script>
+  <script src="/js/libs/firebase_adapter.js"></script>
+  <script src="/js/libs/moment.min.js"></script>
+  <script src="/js/app.js"></script>
 
 </body>
 </html>

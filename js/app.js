@@ -8,7 +8,9 @@ App.Store = DS.Store.extend({
 });
 
 App.Router.map(function() {
-  this.resource("events");
+  this.resource("events", {path: "/events/"}, function(){
+    this.route("new");
+  });
   this.resource("event", {path: "/events/:event_id"}, function(){
     this.route("edit");
   });
@@ -17,7 +19,7 @@ App.Router.reopen({
   location: 'history'
 });
 
-App.Event = DS.Firebase.LiveModel.extend({
+App.Event = DS.Firebase.Model.extend({
   name: DS.attr("string"),
   date: DS.attr("date"),
   attendees: DS.hasMany("App.Attendee"),
@@ -38,8 +40,26 @@ App.IndexRoute = Ember.Route.extend({
   }
 });
 
-App.EventsRoute = Ember.Route.extend({
+App.EventsIndexRoute = Ember.Route.extend({
   model: function() {
     return App.Event.find();
+  }
+});
+
+App.EventsNewController = Ember.ArrayController.extend({
+  createEvent: function(){
+    var name = this.get("name");
+    if (!name.trim()){return;}
+    var date = this.get("date");
+
+    var event = App.Event.createRecord({
+      name: name,
+      date: moment().add("days",1) .toDate()
+    });
+
+    this.set("name", "");
+    this.set("date", "");
+
+    event.save()
   }
 });
