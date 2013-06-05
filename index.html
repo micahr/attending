@@ -73,16 +73,17 @@
     <h3>Edit Event</h3>
     {{partial "event"}}
     <p>
-      <button class="btn btn-success" id="event-edit" {{action 'saveEvent'}} >Save Event</button>
-      <button class="btn btn-danger" id="event-cancel" {{action 'cancelEvent'}}>Cancel</button>
+      <button class="btn btn-success" id="event-edit" {{action 'saveEvent'}} >Save Event <i class="icon-ok icon-white"></i></button>
+      <button class="btn btn-danger" id="event-cancel" {{action 'cancelEvent'}}>Cancel <i class="icon-repeat icon-white"></i></button>
     </p>
+    <p><button class="btn btn-small btn-danger" id="event-delete" {{action 'deleteEvent'}}>Delete <i class="icon-trash icon-white"></i></button></p>
   </script>
   <script type="text/x-handlebars" data-template-name="event">
     <div class="row-fluid">
       <div class="span8">
         <h1>{{name}}</h1>
         {{formattedDate}}
-        <p>{{#linkTo event.edit}}Edit{{/linkTo}}</p>
+        <p>{{#linkTo event.edit classNames="btn btn-small btn-warning"}}Edit <i class="icon-pencil icon-white"></i>{{/linkTo}}</p>
       </div>
       <div class="span4">
         {{outlet}}

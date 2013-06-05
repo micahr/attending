@@ -58,6 +58,12 @@ App.EventEditController = Ember.ObjectController.extend({
   },
   saveEvent: function(){
     this.get("model").save();
+    this.transitionToRoute("event")
+  },
+  deleteEvent: function(){
+    var event = this.get("model");
+    event.deleteRecord();
+    event.save();
   }
 });
 
