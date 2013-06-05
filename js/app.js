@@ -11,7 +11,7 @@ App.Router.map(function() {
   this.resource("events", {path: "/events/"}, function(){
     this.route("new");
   });
-  this.resource("event", {path: "/events/:event_id"}, function(){
+  this.resource("event", {path: "/event/:event_id"}, function(){
     this.route("edit");
   });
 });
@@ -40,9 +40,24 @@ App.IndexRoute = Ember.Route.extend({
   }
 });
 
+App.EventEditRoute = Ember.Route.extend({
+  setupController: function(controller, model){
+    controller.set("model", this.controllerFor("event").get("model"));
+  }
+});
+
 App.EventsIndexRoute = Ember.Route.extend({
   model: function() {
     return App.Event.find();
+  }
+});
+
+App.EventEditController = Ember.ObjectController.extend({
+  cancelEvent: function(){
+    return this.transitionToRoute("event");
+  },
+  saveEvent: function(){
+    this.get("model").save();
   }
 });
 

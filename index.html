@@ -60,15 +60,35 @@
   </script>
   <script type="text/x-handlebars" data-template-name="events/new">
     <h3>Create Event</h3>
-    <label for="event-name">Name</label>{{view Ember.TextField id="event-name" valueBinding="name" }}
-    <label for="event-date">Date</label>{{view Ember.TextField id="event-date" valueBinding="date"}}
+    {{partial "event"}}
     <p>
       <button class="btn btn-success" id="event-create" {{action 'createEvent'}} >Create New Event</button>
     </p>
   </script>
+  <script type="text/x-handlebars" data-template-name="_event">
+    <label for="event-name">Name</label>{{view Ember.TextField id="event-name" valueBinding="name" }}
+    <label for="event-date">Date</label>{{view Ember.TextField id="event-date" valueBinding="date"}}
+  </script>
+  <script type="text/x-handlebars" data-template-name="event/edit">
+    <h3>Edit Event</h3>
+    {{partial "event"}}
+    <p>
+      <button class="btn btn-success" id="event-edit" {{action 'saveEvent'}} >Save Event</button>
+      <button class="btn btn-danger" id="event-cancel" {{action 'cancelEvent'}}>Cancel</button>
+    </p>
+  </script>
   <script type="text/x-handlebars" data-template-name="event">
-    <h1>{{name}}</h1>
-    {{formattedDate}}
+    <div class="row-fluid">
+      <div class="span8">
+        <h1>{{name}}</h1>
+        {{formattedDate}}
+        <p>{{#linkTo event.edit}}Edit{{/linkTo}}</p>
+      </div>
+      <div class="span4">
+        {{outlet}}
+      </div>
+    </div>
+
   </script>
 
   <script src="https://cdn.firebase.com/v0/firebase.js"></script>
