@@ -1,3 +1,12 @@
 .main-content {
   margin-top: 1em;
 }
+#event-name-heading > #edit-event-btn {
+  display: none;
+}
+#event-name-heading:hover > #edit-event-btn {
+  display: inline-block;
+}
+.attending-btns {
+  display: none;
+}

@@ -19,18 +19,30 @@ App.Router.reopen({
   location: 'history'
 });
 
-App.Event = DS.Firebase.Model.extend({
+App.Event = DS.Firebase.LiveModel.extend({
   name: DS.attr("string"),
   date: DS.attr("date"),
+  description: DS.attr("string"),
   attendees: DS.hasMany("App.Attendee"),
 
+  whosGoing: function(){
+    console.log(this.get("attendees").filterProperty("attending"));
+    return this.get("attendees").filterProperty("attending");
+  }.property("attendees.@each.attending"),
+  whosNotGoing: function(){
+    return this.get("attendees").filterProperty("attending", false);
+  }.property("attendees.@each.attending"),
+  calendarDate: function(){
+    return moment(this.get("date")).calendar();
+  }.property("date"),
   formattedDate: function(){
-    return moment(this.get("date")).format("MMM Do YYYY h:mm:ss a")
+    return moment(this.get("date")).format("MMM Do YYYY h:mm:ss a");
   }.property("date")
 });
 
-App.Attendee = DS.Firebase.Model.extend({
+App.Attendee = DS.Firebase.LiveModel.extend({
   name: DS.attr("string"),
+  attending: DS.attr("boolean"),
   event: DS.belongsTo("App.Event")
 });
 
@@ -52,6 +64,44 @@ App.EventsIndexRoute = Ember.Route.extend({
   }
 });
 
+App.AddAttendeeView = Ember.View.extend({
+  tagName: 'div'
+});
+
+App.EventsIndexController = Ember.ArrayController.extend({
+  currentEvents: function(){
+    return this.get("model").filter(function(item){
+      return item.get("date") >= new Date();
+    });
+  }.property("model.@each.date")
+});
+
+App.EventController = Ember.ObjectController.extend({
+  attendeeNameEntered: function(){
+    var attendeeName = this.get("attendeeName") || "";
+    if (attendeeName.length > 0)
+      $(".attending-btns").slideDown();
+    else
+      $(".attending-btns").slideUp();
+  }.observes("attendeeName"),
+  attending: function(){
+    this.addAttendee(this.get("attendeeName"), true);
+  },
+  notAttending: function(){
+    this.addAttendee(this.get("attendeeName"), false);
+  },
+  addAttendee: function(name, attending){
+    if (!name){return;}
+    if (!name.trim()){return;}
+    var event = this.get("model");
+    var attendee = App.Attendee.createRecord({name: name, attending: attending});
+    event.get("attendees").pushObject(attendee);
+    attendee.save();
+    event.save();
+    this.set("attendeeName", "");
+  }
+});
+
 App.EventEditController = Ember.ObjectController.extend({
   cancelEvent: function(){
     return this.transitionToRoute("event");
@@ -70,16 +120,19 @@ App.EventEditController = Ember.ObjectController.extend({
 App.EventsNewController = Ember.ArrayController.extend({
   createEvent: function(){
     var name = this.get("name");
-    if (!name.trim()){return;}
+    var description = this.get("description");
+    if (!name.trim() || !description.trim()){return;}
     var date = this.get("date");
 
     var event = App.Event.createRecord({
       name: name,
+      description: description,
       date: moment().add("days",1) .toDate()
     });
 
     this.set("name", "");
     this.set("date", "");
+    this.set("description", "");
 
     event.save()
   }
