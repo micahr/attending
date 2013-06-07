@@ -6,6 +6,7 @@
   <link rel="stylesheet" href="/css/bootstrap.min.css">
   <link rel="stylesheet" href="/css/bootswatch.min.css">
   <link rel="stylesheet" href="/css/bootstrap-responsive.min.css">
+  <link rel="stylesheet" href="/css/bootstrap-datetimepicker.min.css">
   <link rel="stylesheet" href="/css/style.css">
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -37,7 +38,7 @@
   </script>
 
   <script type="text/x-handlebars" data-template-name="index">
-    <div class="row-fluid">
+    <div class="row">
       <div class="span12">
         <p>
         Feel like attending an event? {{#linkTo events }} See All Events{{/linkTo}}
@@ -47,7 +48,7 @@
     </div>
   </script>
   <script type="text/x-handlebars" data-template-name="events/index">
-    <div class="row-fluid">
+    <div class="row">
       <div class="span12">
         <h3>Events</h3>
         <ul class="unstyled">
@@ -66,9 +67,17 @@
     </p>
   </script>
   <script type="text/x-handlebars" data-template-name="_event">
-    <label for="event-name">Name</label>{{view Ember.TextField id="event-name" valueBinding="name" }}
-    <label for="event-date">Date</label>{{view Ember.TextField id="event-date" valueBinding="date"}}
-    <label for="event-description">Description</label>{{view Ember.TextArea id="event-description" valueBinding="description" }}
+    {{#view App.EventPartialView}}
+    <label for="event-name">Name</label>{{view Ember.TextField id="event-name" classNames="span5" valueBinding="name" }}
+    <label for="event-date">Date</label>
+    <div id="datetimepicker" class="input-append">
+      {{view view.DateView id="event-date" classNames="span3" valueBinding="simpleDate"}}
+      <span class="add-on">
+        <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+    </span>
+    </div>
+    <label for="event-description">Description</label>{{view Ember.TextArea classNames="span5" id="event-description" valueBinding="description" }}
+    {{/view}}
   </script>
   <script type="text/x-handlebars" data-template-name="event/edit">
     <h3>Edit Event</h3>
@@ -80,10 +89,10 @@
     <p><button class="btn btn-small btn-danger" id="event-delete" {{action 'deleteEvent'}}>Delete <i class="icon-trash icon-white"></i></button></p>
   </script>
   <script type="text/x-handlebars" data-template-name="event">
-    <div class="row-fluid">
+    <div class="row">
       <div class="span8">
         <h1 id="event-name-heading" class="text-success">{{name}} {{#linkTo event.edit tagName="span" id='edit-event-btn' classNames="btn btn-small btn-warning"}}Edit <i class="icon-pencil icon-white"></i>{{/linkTo}}</h1>
-        <span class="muted">{{calendarDate}}</span>
+        <span class="muted">{{formattedDate}}</span>
         <p>{{description}}</p>
         <div class="attendees row-fluid">
           <div class="span6">
@@ -109,14 +118,14 @@
         </div>
       </div>
       <div class="span4">
-        {{#view App.AddAttendeeView id="add-attendee" classNames="well" tagName="div"}}
+        <div id="add-attendee" class="well">
           <h4>Are you Attending?</h4>
           {{view Ember.TextField id="attendee-name" valueBinding="attendeeName" placeholder="Name" }}
           <div class="attending-btns">
             <button class="btn btn-small btn-success" {{action 'attending'}}>Attending</button>
             <button class="btn btn-small btn-danger pull-right" {{action 'notAttending'}}>Not Attending</button>
           </div>
-        {{/view}}
+        </div>
         {{outlet}}
       </div>
     </div>
@@ -131,6 +140,7 @@
   <script src="/js/libs/ember-data-latest.js"></script>
   <script src="/js/libs/firebase_adapter.js"></script>
   <script src="/js/libs/moment.min.js"></script>
+  <script src="/js/libs/bootstrap-datetimepicker.min.js"></script>
   <script src="/js/app.js"></script>
 
 </body>

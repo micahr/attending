@@ -1,5 +1,12 @@
 App = Ember.Application.create({LOG_TRANSITIONS: true});
 
+$(document).on("focus", "#event-date", function(){
+
+});
+$(document).on("focus", "#event-time", function(){
+
+});
+
 App.Store = DS.Store.extend({
   revision: 12,
   adapter: DS.Firebase.Adapter.create({
@@ -22,11 +29,11 @@ App.Router.reopen({
 App.Event = DS.Firebase.LiveModel.extend({
   name: DS.attr("string"),
   date: DS.attr("date"),
+  time: DS.attr("date"),
   description: DS.attr("string"),
   attendees: DS.hasMany("App.Attendee"),
 
   whosGoing: function(){
-    console.log(this.get("attendees").filterProperty("attending"));
     return this.get("attendees").filterProperty("attending");
   }.property("attendees.@each.attending"),
   whosNotGoing: function(){
@@ -36,7 +43,16 @@ App.Event = DS.Firebase.LiveModel.extend({
     return moment(this.get("date")).calendar();
   }.property("date"),
   formattedDate: function(){
-    return moment(this.get("date")).format("MMM Do YYYY h:mm:ss a");
+    return moment(this.get("date")).format("MMM Do YYYY h:mm A");
+  }.property("date"),
+  simpleDate: function(key, value){
+    if (arguments.length !== 1) {
+      if (key === "simpleDate" && value != null)
+      {
+        this.set('date',moment(value, "MM/DD/YYYY hh:mm A").toDate());
+      }
+    }
+    return moment(this.get("date")).format("MM/DD/YYYY hh:mm A");
   }.property("date")
 });
 
@@ -64,8 +80,27 @@ App.EventsIndexRoute = Ember.Route.extend({
   }
 });
 
-App.AddAttendeeView = Ember.View.extend({
-  tagName: 'div'
+App.EventPartialView = Ember.View.extend({
+  DateView: Ember.TextField.extend({
+    attributeBindings: ['data-format'],
+    "data-format":"MM/dd/yyyy HH:mm PP",
+    didInsertElement: function(){
+      var controller = this.get('controller');
+      var self = this;
+      $("#datetimepicker").datetimepicker({
+        language: 'en',
+        pick12HourFormat: true,
+        pickSeconds: false,
+        startDate: new Date()
+      }).on("changeDate", function(evt){
+          console.log(self);
+          controller.get("model").set("simpleDate", moment(evt.date.valueOf()).format("MM/DD/YYYY hh:mm A"));
+          self.set("value", moment(evt.date.valueOf()).format("MM/DD/YYYY hh:mm A"));
+          //controller.get('model').set("date", );
+        });
+      $("#datetimepicker").data("datetimepicker").setDate(controller.get("model.date"));
+    }
+  })
 });
 
 App.EventsIndexController = Ember.ArrayController.extend({
@@ -122,12 +157,14 @@ App.EventsNewController = Ember.ArrayController.extend({
     var name = this.get("name");
     var description = this.get("description");
     if (!name.trim() || !description.trim()){return;}
-    var date = this.get("date");
-
+    var date = this.get("simpleDate");
+    console.log(date);
+    var momentDate = moment(date, "MM/DD/YYYY hh:mm A");
+    if (!momentDate.isValid()){return;}
     var event = App.Event.createRecord({
       name: name,
       description: description,
-      date: moment().add("days",1) .toDate()
+      date: momentDate.toDate()
     });
 
     this.set("name", "");

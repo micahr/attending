@@ -10,3 +10,15 @@
 .attending-btns {
   display: none;
 }
+
+.bootstrap-datetimepicker-widget.dropdown-menu {
+  background-color: #fff;
+}
+#datetimepicker.input-append .add-on {
+  position: absolute;
+}
+
+#datetimepicker.input-append .add-on i {
+  position: relative;
+  top: 20%;
+}
