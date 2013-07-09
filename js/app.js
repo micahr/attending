@@ -34,10 +34,13 @@ App.Event = DS.Firebase.LiveModel.extend({
   attendees: DS.hasMany("App.Attendee"),
 
   whosGoing: function(){
-    return this.get("attendees").filterProperty("attending");
+    return this.get("attendees").filterProperty("attending","true");
   }.property("attendees.@each.attending"),
   whosNotGoing: function(){
-    return this.get("attendees").filterProperty("attending", false);
+    return this.get("attendees").filterProperty("attending", "false");
+  }.property("attendees.@each.attending"),
+  whosMaybeGoing: function(){
+    return this.get("attendees").filterProperty("attending", "maybe");
   }.property("attendees.@each.attending"),
   calendarDate: function(){
     return moment(this.get("date")).calendar();
@@ -58,7 +61,7 @@ App.Event = DS.Firebase.LiveModel.extend({
 
 App.Attendee = DS.Firebase.LiveModel.extend({
   name: DS.attr("string"),
-  attending: DS.attr("boolean"),
+  attending: DS.attr("string"),
   event: DS.belongsTo("App.Event")
 });
 
@@ -120,10 +123,13 @@ App.EventController = Ember.ObjectController.extend({
       $(".attending-btns").slideUp();
   }.observes("attendeeName"),
   attending: function(){
-    this.addAttendee(this.get("attendeeName"), true);
+    this.addAttendee(this.get("attendeeName"), "true");
   },
   notAttending: function(){
-    this.addAttendee(this.get("attendeeName"), false);
+    this.addAttendee(this.get("attendeeName"), "false");
+  },
+  maybe: function(){
+    this.addAttendee(this.get("attendeeName"), "maybe");
   },
   addAttendee: function(name, attending){
     if (!name){return;}

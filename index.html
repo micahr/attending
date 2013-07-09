@@ -95,23 +95,33 @@
         <span class="muted">{{formattedDate}}</span>
         <p>{{description}}</p>
         <div class="attendees row-fluid">
-          <div class="span6">
+          <div class="span3">
             <h4>Attending</h4>
             <ul class="unstyled">
               {{#each whosGoing}}
               <li>{{name}}</li>
               {{else}}
-              <li>No One Attending Yet</li>
+              <li>No Attendees Yet</li>
               {{/each}}
             </ul>
           </div>
-          <div class="span6">
+          <div class="span3">
+            <h4>Maybe</h4>
+            <ul class="unstyled">
+              {{#each whosMaybeGoing}}
+              <li>{{name}}</li>
+              {{else}}
+              <li>No Maybes Yet</li>
+              {{/each}}
+            </ul>
+          </div>
+          <div class="span3">
             <h4>Not Attending</h4>
             <ul class="unstyled">
               {{#each whosNotGoing}}
               <li>{{name}}</li>
               {{else}}
-              <li>No One Not Attending Yet</li>
+              <li>No One Bailing Yet</li>
               {{/each}}
             </ul>
           </div>
@@ -121,9 +131,10 @@
         <div id="add-attendee" class="well">
           <h4>Are you Attending?</h4>
           {{view Ember.TextField id="attendee-name" valueBinding="attendeeName" placeholder="Name" }}
-          <div class="attending-btns">
+          <div class="attending-btns btn-group">
             <button class="btn btn-small btn-success" {{action 'attending'}}>Attending</button>
-            <button class="btn btn-small btn-danger pull-right" {{action 'notAttending'}}>Not Attending</button>
+            <button class="btn btn-small btn-warning" {{action 'maybe'}}>Maybe</button>
+            <button class="btn btn-small btn-danger" {{action 'notAttending'}}>Not Attending</button>
           </div>
         </div>
         {{outlet}}
