@@ -106,6 +106,29 @@ App.EventPartialView = Ember.View.extend({
   })
 });
 
+App.EventView = Ember.View.extend({
+  didInsertElement: function(){
+    $(".attendees").find("ul").sortable({
+      connectWith: '.connectedSortable',
+      distance: 15,
+      receive: function(event, ui){
+        // Get the id of the attendee from the item being moved
+        var attendee = App.Attendee.find($(ui.item[0]).attr('data-id'));
+        // Get the list id (true,false,maybe) based on which list they dropped
+        // the name on.
+        var list = $(this).attr("data-list");
+        if (attendee !== undefined){
+          // set the attendance status
+          attendee.set('attending',list);
+          attendee.save();
+          // remove the old LI
+          $(ui.item[0]).remove();
+        }
+      }
+    });
+  }
+});
+
 App.EventsIndexController = Ember.ArrayController.extend({
   currentEvents: function(){
     return this.get("model").filter(function(item){

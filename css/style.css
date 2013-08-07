@@ -26,3 +26,6 @@
   margin-left:auto;
   margin-right:auto;
 }
+.connectedSortable li {
+  cursor: move;
+}
