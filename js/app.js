@@ -1,12 +1,5 @@
 App = Ember.Application.create({LOG_TRANSITIONS: true});
 
-$(document).on("focus", "#event-date", function(){
-
-});
-$(document).on("focus", "#event-time", function(){
-
-});
-
 App.Store = DS.Store.extend({
   revision: 12,
   adapter: DS.Firebase.Adapter.create({
